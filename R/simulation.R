@@ -120,7 +120,7 @@ errsim <- function(n_obs, version) {
 #' @param n_subj Number of subjects to simulate. Must be a positive
 #'   integer that is a multiple of 2.
 #' 
-#' @param n_obs Number of observations per subject. Must be a positive
+#' @param n_items Number of items/observations per subject. Must be a positive
 #'   even integer.
 #'
 #' @param int Intercept.
@@ -131,11 +131,17 @@ errsim <- function(n_obs, version) {
 #'
 #' @param AB AB interaction effect.
 #'
-#' @param rint Random intercept variance.
+#' @param item_rint Item random intercept variance.
 #'
-#' @param rslp Random slope variance (for factor A).
+#' @param item_rslp Item random slope variance (for factor B).
 #'
-#' @param rcorr Random correlation.
+#' @param item_rcorr Item random correlation.
+#'
+#' @param subj_rint Subject random intercept variance.
+#'
+#' @param subj_rslp Subject random slope variance (for factor A).
+#'
+#' @param subj_rcorr Subject random correlation.
 #'
 #' @param version Autocorrelation case number; an integer between 0
 #'   and 8 (see \code{\link{errsim}}).
@@ -166,9 +172,13 @@ errsim <- function(n_obs, version) {
 #'
 #' \item{\code{Y_b}}{Response variable for the fully blocked version.}
 #'
-#' \item{\code{rint}}{Random intercept effect (verbose mode only.)}
+#' \item{\code{item_rint}}{Item random intercept effect (verbose mode only.)}
 #'
-#' \item{\code{rslp}}{Random slope effect (verbose mode only).}
+#' \item{\code{item_rslp}}{Item random slope effect (verbose mode only).}
+#'
+#' \item{\code{subj_rint}}{Subject random intercept effect (verbose mode only.)}
+#'
+#' \item{\code{subj_rslp}}{Subject random slope effect (verbose mode only).}
 #'
 #' \item{\code{Y_fit}}{Fitted value (all effects except residual.)}
 #' 
