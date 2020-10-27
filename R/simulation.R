@@ -6,6 +6,8 @@
 #' 
 #' @param version An integer specifying the error autocorrelation
 #'   case number; one of the following.
+#'
+#' @param extra Extra parameters governing the process.
 #' 
 #' \describe{
 #'   \item{0}{No autocorrelation (white noise).}
@@ -22,23 +24,26 @@
 #'   \item{6}{Multi-scale: combination of 1 and 4.}
 #'   \item{7}{Multi-scale: combination of 2 and 3.}
 #'   \item{8}{Multi-scale: combination of 2 and 4.}
+#'   \item{9}{Linear trend; use the 'extra' parameter 'strength' [0, 1] to determine strength, default = .9}
 #' }
 #' 
 #' @return A vector of simulated observations guaranteed to have a
 #'   mean of 0 and a standard deviation of 1.
 #' 
 #' @export
-errsim <- function(n_obs, version) {
+errsim <- function(n_obs, version, extra = NULL) {
 
-  if (n_obs > length(stat_gp(1, 1)$GP))
+  if (n_obs > length(stat_gp(1, 1)$GP) &&
+      (version %in% 3:8)) {
     stop("'n_obs' must be smaller than ",
          length(stat_gp(1, 1)$GP))
+    }
   
   version_int <- as.integer(version)
   if (is.na(version_int))
     stop("'version' must be an integer")
-  if ((version_int < 0L) || (version_int > 8L))
-    stop("'version' must be between 0 and 8")
+  if ((version_int < 0L) || (version_int > 9L))
+    stop("'version' must be between 0 and 9")
   
   x <- seq(-pi, pi, length.out = n_obs)
 
@@ -110,6 +115,20 @@ errsim <- function(n_obs, version) {
     vv <- sqrt(ampvar) * sdat +
       sqrt(noise_lvl) * ndat
     attr(vv, "amp") <- ampvar    
+  } else if (version == 9L) {
+    sparm <- if (is.null(extra)) {
+               .9
+             } else {
+               if (is.null(extra[["strength"]])) {
+                 stop("'extra' was not null and 'strength' was undefined")
+               } else {
+                 extra[["strength"]]
+               }
+             }
+    lin <- seq(-1, 1, length.out = n_obs)
+    tvar <- var(lin) / sparm
+    noise <- rnorm(n_obs, mean = 0, sd = sqrt(tvar - var(lin)))
+    vv <- lin + noise
   }
 
   (vv - mean(vv)) / sd(vv - mean(vv))
