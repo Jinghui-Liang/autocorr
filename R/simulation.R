@@ -258,7 +258,6 @@ sim_2x2 <- function(n_subj = 48, n_items = 48,
   trials_subj <- merge(sfx, trials, by = "subj_id")
   dat <- merge(ifx, trials_subj, by = "item_id")
 
-
   dat[["A_c"]] <- ifelse(dat[["A"]] == "A1", -.5, .5)
   dat[["B_c"]] <- ifelse(dat[["B"]] == "B1", -.5, .5)
 
